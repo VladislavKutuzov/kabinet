@@ -1,62 +1,92 @@
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    box-sizing: border-box;
-  }
+  font-family: Arial, sans-serif;
+  padding: 15px;
+  background-color: #121212;
+  color: #f0f0f0;
+  margin: 0;
+}
 
-  #resetBtn {
-    padding: 10px 15px;
-    margin-bottom: 20px;
-  }
+h3 {
+  color: #ffffff;
+}
 
-  .people {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+#resetBtn {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.person {
+  padding: 10px;
+  background-color: #1f1f1f;
+  border: 1px solid #888;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.person.selected {
+  background-color: #3366cc;
+  color: white;
+  font-weight: bold;
+}
+
+.floor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cabinet {
+  width: 90px;
+  min-height: 90px;
+  border: 2px solid #555;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px;
+  background-color: #1f1f1f;
+  border-radius: 6px;
+}
+
+.cabinet-number {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ddd;
+}
+
+#summary {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 450px) {
+  .cabinet {
+    width: 80px;
+    min-height: 80px;
   }
 
   .person {
-    padding: 10px 15px;
-    background-color: #cde;
-    border: 1px solid #888;
-    border-radius: 5px;
-    cursor: pointer;
-    user-select: none;
+    font-size: 14px;
+    padding: 8px;
   }
 
-  .person.selected {
-    background-color: #88c;
-    color: white;
-    font-weight: bold;
+  #resetBtn {
+    width: 100%;
+    font-size: 16px;
   }
-
-  .floor {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .cabinet {
-    width: 90px;
-    min-height: 90px;
-    border: 2px solid #555;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 5px;
-    background-color: #f0f0f0;
-  }
-
-  .cabinet-number {
-    font-weight: bold;
-    margin-bottom: 5px;
-
-  }
-
-  #summary {
-    list-style: none;
-    padding-left: 0;
-  }
+}

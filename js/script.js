@@ -10,7 +10,7 @@ function updateSummary() {
 
     const parent = person.parentElement;
     if (parent.classList.contains("cabinet")) {
-      location = "" + parent.dataset.id;
+      location = parent.dataset.id;
     }
 
     const li = document.createElement("li");
@@ -54,32 +54,33 @@ function loadFromLocalStorage() {
   });
 }
 
-document.addEventListener("click", e => {
-  const person = e.target.closest(".person");
-  if (person) {
-    document.querySelectorAll(".person").forEach(p => p.classList.remove("selected"));
-    selectedPerson = person;
-    selectedPerson.classList.add("selected");
-    return;
-  }
-
-  const cabinet = e.target.closest(".cabinet");
-  if (cabinet && selectedPerson) {
-    cabinet.appendChild(selectedPerson);
-    selectedPerson.classList.remove("selected");
-    selectedPerson = null;
-    updateSummary();
-  }
-});
-
-document.getElementById("resetBtn").addEventListener("click", () => {
-  const peopleList = document.getElementById("peopleList");
-  document.querySelectorAll(".person").forEach(person => {
-    peopleList.appendChild(person);
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  loadFromLocalStorage();
   updateSummary();
-});
 
-// Инициализация
-loadFromLocalStorage();
-updateSummary();
+  document.addEventListener("click", e => {
+    const person = e.target.closest(".person");
+    if (person) {
+      document.querySelectorAll(".person").forEach(p => p.classList.remove("selected"));
+      selectedPerson = person;
+      selectedPerson.classList.add("selected");
+      return;
+    }
+
+    const cabinet = e.target.closest(".cabinet");
+    if (cabinet && selectedPerson) {
+      cabinet.appendChild(selectedPerson);
+      selectedPerson.classList.remove("selected");
+      selectedPerson = null;
+      updateSummary();
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    const peopleList = document.getElementById("peopleList");
+    document.querySelectorAll(".person").forEach(person => {
+      peopleList.appendChild(person);
+    });
+    updateSummary();
+  });
+});

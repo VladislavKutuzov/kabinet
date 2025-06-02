@@ -1,19 +1,20 @@
+let selectedPerson = null;
+
 function updateSummary() {
   const summary = document.getElementById("summary");
   summary.innerHTML = "";
 
   document.querySelectorAll(".person").forEach(person => {
-    let name = person.dataset.name;
-    let location = "в списке";
-    let time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+    const name = person.dataset.name;
     const parent = person.parentElement;
+    let location = "в списке";
+
     if (parent.classList.contains("cabinet")) {
       location = parent.dataset.id;
     }
 
-    // Сохраняем время обновления для каждого
-    person.dataset.updated = time;
+    // НЕ обновляем время здесь, берем из data-updated
+    const time = person.dataset.updated || "--:--";
 
     const li = document.createElement("li");
     li.textContent = `${name} — ${location} (${time})`;
@@ -44,12 +45,19 @@ function loadFromLocalStorage() {
   const data = JSON.parse(localStorage.getItem("peopleLocations"));
   if (!data) return;
 
-  Object.entries(data).forEach(([name, { location: cabinetId, time }]) => {
+  Object.entries(data).forEach(([name, value]) => {
+    if (!value || typeof value !== "object") return;
+
+    const cabinetId = value.location || null;
+    const time = value.time || null;
+
     const person = document.querySelector(`.person[data-name="${name}"]`);
-    const cabinet = document.querySelector(`.cabinet[data-id="${cabinetId}"]`);
+    if (!person) return;
+
+    const cabinet = cabinetId ? document.querySelector(`.cabinet[data-id="${cabinetId}"]`) : null;
     const start = document.getElementById("peopleList");
 
-    if (cabinetId && cabinet) {
+    if (cabinet) {
       cabinet.appendChild(person);
     } else {
       start.appendChild(person);
@@ -67,11 +75,13 @@ function renderSummaryFromStoredData() {
   const summary = document.getElementById("summary");
   summary.innerHTML = "";
 
-  Object.entries(data).forEach(([name, { location, time }]) => {
-    const locationText = location || "в списке";
-    const timeText = time || "--:--";
+  Object.entries(data).forEach(([name, value]) => {
+    if (!value || typeof value !== "object") return;
+
+    const location = value.location || "в списке";
+    const time = value.time || "--:--";
     const li = document.createElement("li");
-    li.textContent = `${name} — ${locationText} (${timeText})`;
+    li.textContent = `${name} — ${location} (${time})`;
     summary.appendChild(li);
   });
 }
@@ -93,6 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cabinet && selectedPerson) {
       cabinet.appendChild(selectedPerson);
       selectedPerson.classList.remove("selected");
+      // Обновляем время только у перемещенного человека
+      selectedPerson.dataset.updated = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       selectedPerson = null;
       updateSummary();
     }
@@ -100,9 +112,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("resetBtn").addEventListener("click", () => {
     const peopleList = document.getElementById("peopleList");
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     document.querySelectorAll(".person").forEach(person => {
       peopleList.appendChild(person);
-      person.dataset.updated = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      // Обновляем время у всех при сбросе
+      person.dataset.updated = now;
     });
     updateSummary();
   });

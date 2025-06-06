@@ -76,12 +76,12 @@ h3 {
 /* Мобильная адаптивность */
 @media (max-width: 450px) {
   .cabinet {
-    width: 120px;
+    width: 110px;
     min-height: 80px;
   }
 
   .cabinet-number {
-    width: 118px;
+    width: 108px;
     padding: 20px 0px;
     text-align: center;
     background: #4b4b4b;

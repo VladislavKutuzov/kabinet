@@ -76,7 +76,7 @@ h3 {
 /* Мобильная адаптивность */
 @media (max-width: 450px) {
   .cabinet {
-    width: 118px;
+    width: 100px;
     min-height: 80px;
   }
 

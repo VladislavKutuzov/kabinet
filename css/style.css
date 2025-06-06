@@ -76,8 +76,16 @@ h3 {
 /* Мобильная адаптивность */
 @media (max-width: 450px) {
   .cabinet {
-    width: 80px;
+    width: 130px;
     min-height: 80px;
+  }
+
+  .cabinet-number {
+    width: 128px;
+    padding: 20px 0px;
+    text-align: center;
+    background: #4b4b4b;
+    border-radius: 5px;
   }
 
   .person {
@@ -89,4 +97,22 @@ h3 {
     width: 100%;
     font-size: 16px;
   }
+  .floor {
+    display: flex;
+    justify-content: space-between;
+  }
 }
+
+.red {
+  background: rgb(172, 0, 0) ;
+}
+
+.green {
+  background: rgb(5, 152, 27) ;
+}
+
+.white {
+  background: rgb(126, 126, 126) ;
+}
+
+

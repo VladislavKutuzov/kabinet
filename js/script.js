@@ -13,7 +13,6 @@ function updateSummary() {
       location = parent.dataset.id;
     }
 
-    // НЕ обновляем время здесь, берем из data-updated
     const time = person.dataset.updated || "--:--";
 
     const li = document.createElement("li");
@@ -30,11 +29,12 @@ function saveToLocalStorage() {
     const name = person.dataset.name;
     const parent = person.parentElement;
     const time = person.dataset.updated || null;
+    const origin = person.dataset.origin || "";
 
     if (parent.classList.contains("cabinet")) {
-      data[name] = { location: parent.dataset.id, time };
+      data[name] = { location: parent.dataset.id, time, origin };
     } else {
-      data[name] = { location: null, time };
+      data[name] = { location: null, time, origin };
     }
   });
 
@@ -50,16 +50,22 @@ function loadFromLocalStorage() {
 
     const cabinetId = value.location || null;
     const time = value.time || null;
+    const origin = value.origin || "";
 
     const person = document.querySelector(`.person[data-name="${name}"]`);
     if (!person) return;
 
+    // Восстановим data-origin если не было
+    if (!person.dataset.origin && origin) {
+      person.dataset.origin = origin;
+    }
+
     const cabinet = cabinetId ? document.querySelector(`.cabinet[data-id="${cabinetId}"]`) : null;
-    const start = document.getElementById("peopleList");
+    const start = origin ? document.getElementById(origin) : null;
 
     if (cabinet) {
       cabinet.appendChild(person);
-    } else {
+    } else if (start) {
       start.appendChild(person);
     }
 
@@ -87,6 +93,14 @@ function renderSummaryFromStoredData() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Проставим data-origin на старте
+  document.querySelectorAll(".people").forEach(group => {
+    const groupId = group.id;
+    group.querySelectorAll(".person").forEach(person => {
+      person.dataset.origin = groupId;
+    });
+  });
+
   loadFromLocalStorage();
   renderSummaryFromStoredData();
 
@@ -103,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cabinet && selectedPerson) {
       cabinet.appendChild(selectedPerson);
       selectedPerson.classList.remove("selected");
-      // Обновляем время только у перемещенного человека
       selectedPerson.dataset.updated = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       selectedPerson = null;
       updateSummary();
@@ -111,14 +124,20 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("resetBtn").addEventListener("click", () => {
-    const peopleList = document.getElementById("peopleList");
-    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let msg = confirm("Вы точно хотите сбросить?");
+    if (msg) {
+      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    document.querySelectorAll(".person").forEach(person => {
-      peopleList.appendChild(person);
-      // Обновляем время у всех при сбросе
-      person.dataset.updated = now;
-    });
-    updateSummary();
+      document.querySelectorAll(".person").forEach(person => {
+        const originId = person.dataset.origin;
+        const originContainer = document.getElementById(originId);
+        if (originContainer) {
+          originContainer.appendChild(person);
+        }
+        person.dataset.updated = now;
+      });
+
+      updateSummary();
+    }
   });
 });

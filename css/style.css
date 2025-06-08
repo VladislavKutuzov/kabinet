@@ -73,10 +73,21 @@ h3 {
   padding-left: 0;
 }
 
+.toggle-button {
+      padding: 10px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      background-color: green;
+      transition: background-color 0.3s;
+    }
+
 /* Мобильная адаптивность */
 @media (max-width: 450px) {
   .cabinet {
-    width: 116px;
+    width: 130px;
     min-height: 80px;
   }
 
